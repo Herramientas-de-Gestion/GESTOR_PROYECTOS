@@ -37,6 +37,7 @@ with app.app_context():
 def home():
     return redirect(url_for('login'))
 #============================================================================================================
+
 # ================================ RUTA PARA EL LOGIN PRINCIPAL =============================================
 @app.route('/login',methods=['GET', 'POST'] )
 def login():
@@ -48,7 +49,7 @@ def enviar_datos():
         correo = request.form['correo']
         contraseña = request.form['contraseña']
         contraseña = CN_Recursos().convertir_hash(contraseña)
-        usuario = CD_Usuario().consultar_usuario(correo,contraseña)
+        usuario = CN_Usuarios().consultar_usuario(correo,contraseña)
         if usuario:
             session['id_usuario'] = usuario.id_usuario
             session['nombre_usuario'] = usuario.nombre_usuario
@@ -65,6 +66,7 @@ def logout():
     session.clear()
     return redirect(url_for('login')) 
 #============================================================================================================
+
 # ================================ RUTA PARA LA SECCION REGISTRO  ===========================================
 @app.route('/registro_vista', methods=['GET', 'POST'])
 def registro_vista():
@@ -72,34 +74,36 @@ def registro_vista():
 #RUTA PARA REALIZAR EL REGISTRO
 @app.route('/registro_usuario', methods=['GET', 'POST'])
 def registro_usuario():
+    mensaje = ""
     if request.method == 'POST':
         nombre = request.form['nombre']
         apellido = request.form['apellido']
         correo = request.form['correo']
         contraseña = request.form['contraseña']
-        conf_contraseña = request.form ['conf_contraseña']
+        conf_contraseña = request.form['conf_contraseña']
 
-        if CN_Usuarios().confirmar_contraseña(contraseña,conf_contraseña):
-            mensaje = CN_Usuarios().confirmar_contraseña(contraseña,conf_contraseña)
-            return render_template('registro.html',mensaje=mensaje)
-        
+        # Verificar contraseña
+        mensaje_contraseña = CN_Usuarios().confirmar_contraseña(contraseña, conf_contraseña)
+        if mensaje_contraseña:
+            return render_template('registro.html', mensaje=mensaje_contraseña)
+
         obj_user = Usuario(
             nombre_usuario=nombre,
             apellido_usuario=apellido,
             correo_usuario=correo,
-            contraseña_usuario=CN_Recursos().convertir_hash(contraseña)
+            contraseña_usuario=contraseña
         )
-
         mensaje = CN_Usuarios().usuario_registrado(obj_user)
+
         if mensaje == "usuario creado exitosamente":
-            Enviar_correo(correo,CN_Recursos().convertir_hash(contraseña))
+            Enviar_correo(correo, contraseña)
             mensaje_bueno = "Felicidades, usuario creado exitosamente"
-            db.session.add(obj_user)
-            db.session.commit()
-            return render_template('registro.html',mensaje=mensaje_bueno)
-        
-    return render_template('registro.html',mensaje=mensaje)
+            return render_template('registro.html', mensaje=mensaje_bueno)
+
+    return render_template('registro.html', mensaje=mensaje)
+
 #============================================================================================================
+
 # ================================ RUTA PARA LA SECCION INDEX  ==============================================
 @app.route('/index')
 def index():

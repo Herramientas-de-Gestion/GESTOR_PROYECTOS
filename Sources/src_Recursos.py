@@ -1,4 +1,6 @@
 #IMPORTACIONES NECESARIAS
+from flask import render_template, session
+from functools import wraps
 import hashlib
 import uuid
 
@@ -13,3 +15,12 @@ class CN_Recursos():
     def generar_clave():
         clave = uuid.uuid4().hex[:6]
         return clave
+
+    #ESTA FUNCION ME PERMITE PROTEGER LAS RUTAS DONDE NO ME HAYA LOGEADO
+    def login_required(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'correo_usuario' not in session:  # Verificar si el usuario está autenticado
+                return render_template('login.html', message="Debes iniciar sesión primero")
+            return f(*args, **kwargs)
+        return decorated_function 
