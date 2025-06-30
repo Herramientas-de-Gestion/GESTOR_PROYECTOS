@@ -9,7 +9,7 @@
     <meta name="author" content="" />
     <title>Static Navigation - SB Admin</title>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
 
 </head>
 
@@ -68,18 +68,8 @@
                                 <button class="btn bg-dark text-white" onclick="abrirModal()">
                                     Agregar un nuevo proyecto
                                 </button>
-                                <!-- {% for proyecto in proyectos_usuario %}
-                                <a class="nav-link" href="{{ url_for('ver_proyecto', proyecto_id=proyecto.id_proyecto) }}">
-                                    {{ proyecto.nombre_proyecto }}
-                                </a>
-                                {% endfor %} -->
-                                {% for p in proyectos %}
-                                    <a class="nav-link" href="{{ url_for('ver_proyecto', proyecto_id=p.id_proyecto) }}">
-                                        <strong>{{ p.id_proyecto }} - {{ p.nombre_proyecto }} </strong>
-                                    </a>
-                                    
-                                {% endfor %}
-                                <a class="nav-link" href="{{ url_for('proyectos') }}">
+
+                                <a class="nav-link" href="">
                                     Ver todos los proyectos
                                 </a>
                             </nav>
