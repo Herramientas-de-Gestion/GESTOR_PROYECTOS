@@ -1,36 +1,39 @@
+{% extends 'layout/layout.html' %}
+{% block body%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 <div class="container-fluid mt-3">
-    <h4>Bienvenido</h4>
-    <p>Note: Try to add a new div with class="col" inside the row class - this will create four equal-width columns.</p>
+    
+    <p>
+        Explora nuestra herramienta para gestionar tus actividades agrupandolos por proyectos
+    </p>
     <div class="row">
         <div class="col-sm-8 p-12 bg-primary text-white">
             <p>Nosotros</p>
             <p>Añade colaboradores</p>
             <p>Mis trabajos</p>
-            <p></p>
+
         </div>
         <div class="col-sm-4 bg-dark text-white">
-            <p>Tareas</p>
-            <p>Manual</p>
-            <p type="button" class="btn bg-dark text-white" data-bs-toggle="modal" data-bs-target="#myModal_correo">Envianos una sugerencia</p>
-            <button>
-                Enviar mensaje
-            </button>
-            <p>Centro de ayuda</p>
+            <button class="btn bg-dark text-white"> 
+                Tareas
+            </button><br>
+            <button class="btn bg-dark text-white"> 
+                Manual
+            </button><br>
+            <!-- <p type="button" class="btn bg-dark text-white" data-bs-toggle="modal" data-bs-target="#myModal_correo">Envianos una sugerencia</p> -->
+            <button class="btn bg-dark text-white" onclick="abrirModalSugerencia()">
+                Enviar una sugerencia
+            </button><br>
+            <button class="btn bg-dark text-white"> 
+                Centro de ayuda
+            </button><br>
         </div>
     </div>
 </div>
 
-<h1>Datos desde SQL Server d</h1>
-<h4>Bienvenido</h4>
-<h3>Bienvenido:</h3>
-<p></p>
-
-<a href="#">
-    <button>Enviar correo</button>
-</a>
-
 <!-- The Modal -->
-<div class="modal" id="myModal_correo" data-bs-backdrop="static">
+<div class="modal" id="myModalSugerencia" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -51,11 +54,25 @@
                             aria-describedby="emailHelp" placeholder="Ingrese el email">
                     </div>
                     <div class="form-group">
+                        <label for="nombre">
+                            <strong>Remitente</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-user" id="nombre" name="nombre"
+                            placeholder="Ingrese el remitente">
+                    </div>
+                    <div class="form-group">
                         <label for="asunto">
                             <strong>Asunto</strong>
                         </label>
                         <input type="text" class="form-control form-control-user" id="asunto" name="asunto"
                             placeholder="Ingrese el asunto">
+                    </div>
+                    <div class="form-group">
+                        <label for="mensaje">
+                            <strong>Mensaje</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-user" id="mensaje" name="mensaje"
+                            placeholder="Ingrese el mensaje">
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-checkbox small">
@@ -78,3 +95,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function abrirModalSugerencia() {
+        var myModal = new bootstrap.Modal(document.getElementById('myModalSugerencia'), {
+            backdrop: 'static'
+        });
+        myModal.show();
+    }
+</script>
+{%endblock%}
