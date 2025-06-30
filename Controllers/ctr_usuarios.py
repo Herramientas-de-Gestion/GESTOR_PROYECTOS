@@ -1,14 +1,21 @@
-from Models.models import Usuario
-
+from Models.models import Usuario, db
+from Sources.src_Recursos import CN_Recursos
 class CD_Usuario():
     def listar_usuario(self):
         usuarios= Usuario.query.all()
         return usuarios
     
-    def consultar_usuario(self,correo,contraseña):
-        usuario_encontrado = Usuario.query.filter_by(correo_usuario=correo, contraseña_usuario=contraseña).first()
-        return usuario_encontrado
+    def agregar_usuario(self, objt_user: Usuario):
+        usuario_agregado = Usuario(
+            nombre_usuario=objt_user.nombre_usuario,
+            apellido_usuario=objt_user.apellido_usuario,
+            correo_usuario=objt_user.correo_usuario,
+            contraseña_usuario=CN_Recursos().convertir_hash(objt_user.contraseña_usuario)
+        )
+        db.session.add(usuario_agregado)
+        db.session.commit()
+        return usuario_agregado
     
-    def escribir_usuario(self,nombre,correo):
-        verificar = print(f"Tu nombre de usuario: {nombre} ; tu correo: {correo}")
-        return verificar
+    #Consultar si el usuario existe para iniciar session
+    def consultar_usuario(self, correo,password):
+        return Usuario.query.filter_by(correo_usuario=correo,contraseña_usuario=password).first()

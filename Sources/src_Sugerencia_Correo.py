@@ -3,12 +3,12 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def Enviar_correo(correo_destino,codigo_especial):
+def Correo_sugerencia(correo_destino,nombre,asunto,mensaje):
     try:
-            asunto = "Tu codigo especial"
-            nombre= "unknow"
+            asunto = asunto
+            nombre= nombre
             correo = correo_destino
-            mensaje = "te mandamos tu codigo especial"
+            mensaje = mensaje
             
             # Configuración del servidor SMTP
             servidor = smtplib.SMTP("smtp.gmail.com", 587)
@@ -22,7 +22,7 @@ def Enviar_correo(correo_destino,codigo_especial):
             msg["Subject"] = asunto  # Asignar el asunto correctamente
 
             #CONSTRUIR EL CUERO DEL MENSAJE
-            cuerpo_mensaje=f"El correo es {correo} \nHola que tal, yo soy {nombre}!!!!\nMi asunto es: {asunto} \nEsta es mi situacion {mensaje} y tu codigo especial es {codigo_especial}"
+            cuerpo_mensaje=f"El correo es de: {correo} \nHola que tal, yo soy {nombre}!!!!\nMi asunto es: {asunto} \nEsta es mi situacion {mensaje} \n Espero puedas enternderme y espero tu respuesta pronto"
             # Adjuntar el mensaje
             msg.attach(MIMEText(cuerpo_mensaje, "plain"))
 
