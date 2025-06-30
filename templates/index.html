@@ -1,0 +1,80 @@
+<div class="container-fluid mt-3">
+    <h4>Bienvenido</h4>
+    <p>Note: Try to add a new div with class="col" inside the row class - this will create four equal-width columns.</p>
+    <div class="row">
+        <div class="col-sm-8 p-12 bg-primary text-white">
+            <p>Nosotros</p>
+            <p>Añade colaboradores</p>
+            <p>Mis trabajos</p>
+            <p></p>
+        </div>
+        <div class="col-sm-4 bg-dark text-white">
+            <p>Tareas</p>
+            <p>Manual</p>
+            <p type="button" class="btn bg-dark text-white" data-bs-toggle="modal" data-bs-target="#myModal_correo">Envianos una sugerencia</p>
+            <button>
+                Enviar mensaje
+            </button>
+            <p>Centro de ayuda</p>
+        </div>
+    </div>
+</div>
+
+<h1>Datos desde SQL Server d</h1>
+<h4>Bienvenido</h4>
+<h3>Bienvenido:</h3>
+<p></p>
+
+<a href="#">
+    <button>Enviar correo</button>
+</a>
+
+<!-- The Modal -->
+<div class="modal" id="myModal_correo" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-dark text-white">
+                <h4 class="modal-title">Envia un mensaje .... </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="user" action="" method="POST">
+                    <div class="form-group">
+                        <label for="correo">
+                            <strong>Correo</strong>
+                        </label>
+                        <input type="email" class="form-control form-control-user" id="correo" name="correo"
+                            aria-describedby="emailHelp" placeholder="Ingrese el email">
+                    </div>
+                    <div class="form-group">
+                        <label for="asunto">
+                            <strong>Asunto</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-user" id="asunto" name="asunto"
+                            placeholder="Ingrese el asunto">
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox small">
+                            <input type="checkbox" class="custom-control-input" id="customCheck">
+                            <label class="custom-control-label" for="customCheck">Remember
+                                Me</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-facebook btn-user btn-block">
+                        Enviar los datos
+                    </button>
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
