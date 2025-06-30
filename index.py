@@ -22,11 +22,21 @@ ma = Marshmallow(app)
 with app.app_context():
     db.create_all()
 
+# ================================ RUTA RAIZ DIRIGIENDO A UNA RUTA ESPECIFICA ===============================
 @app.route('/')
-def inicio ():
-    return 'hola conexion '
-
-
+def home():
+    return redirect(url_for('login'))
+#============================================================================================================
+# ================================ RUTA PARA EL LOGIN PRINCIPAL =============================================
+@app.route('/login',methods=['GET', 'POST'] )
+def login():
+    return render_template('login.html')
+#============================================================================================================
+# ================================ RUTA PARA LA SECCION REGISTRO  ===========================================
+@app.route('/registro_vista', methods=['GET', 'POST'])
+def registro_vista():
+    return render_template('registro.html')
+#============================================================================================================
 if __name__ == '__main__':
     app.run(debug=True, port=9000)
 

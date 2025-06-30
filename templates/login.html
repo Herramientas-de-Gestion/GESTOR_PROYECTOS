@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Herramientas</title>
-    <link rel="stylesheet" href="css/sb-admin-2.css">
-    <link rel="stylesheet" href="css/mejoras.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sb-admin-2.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mejoras.css')}}">
 </head>
 
 <body>
@@ -18,7 +18,7 @@
                     <div class="card-body p-0">
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-login-image">
-                                <img src="img/logo.png" alt="Logo" class="half-img">
+                                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="half-img" height="530px" width="470px">
                             </div>
                             <div class="col-lg-6 coloreado">
                                 <div class="p-5">
@@ -55,10 +55,10 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a href="">Olvidó su contraseña?</a>
+                                        <a href="#">Olvidó su contraseña?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a href="#">Crear una cuenta</a>
+                                        <a href="{{url_for('registro_vista')}}">Crear una cuenta</a>
                                     </div>
                                 </div>
                             </div>
