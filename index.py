@@ -11,13 +11,18 @@ from Settings.settings import get_sqlalchemy_uri
 
 #IMPORTACIN DE CONTROLLERS
 from Controllers.ctr_usuarios import CD_Usuario
+from Controllers.ctr_categoria import Controll_Categoria
+from Controllers.ctr_proyectos import Controll_Proyecto
 
 #IMPORTACIN DE CONTROLLERS
 from FireStore.fs_usuarios import CN_Usuarios
+from FireStore.fs_categoria import categorias_listado,categoria_registrado
+from FireStore.fs_proyectos import proyectos_listado,proyecto_registrado
 
 #IMPORTACION DE SOURCES
 from Sources.src_Recursos import CN_Recursos
 from Sources.src_Correo import Enviar_correo
+from Sources.src_rutas import login_required
 
 #INICIALIZACION DE LA APP FLASK
 app = Flask(__name__)
@@ -101,6 +106,72 @@ def registro_usuario():
             return render_template('registro.html', mensaje=mensaje_bueno)
 
     return render_template('registro.html', mensaje=mensaje)
+
+
+# ===================================== CREAR CATEGORIA ====================================
+@login_required
+@app.route('/nueva_categoria', methods=['POST'])
+def nueva_categoria():
+    print('Creando categoria')
+    if request.method == 'POST':
+        nombreCat = request.form['nombreCat']
+        obj_cat = Categoria(
+            nombre_categoria=nombreCat,
+        )
+        print(obj_cat)
+        mensaje = categoria_registrado(obj_cat)
+        if mensaje == "categoria creado exitosamente":
+            mensaje_bueno = "Felicidades, categoria creado exitosamente"
+            db.session.add(obj_cat)
+            db.session.commit()
+            return render_template('index.html',mensaje=mensaje_bueno)
+    return render_template('index.html')
+
+
+# ===================================== CREAR PROYECTO ====================================
+
+@login_required
+@app.route('/nuevo_proyecto', methods=['POST'])
+def nuevo_proyecto():
+    print('Entraste')
+    if request.method == 'POST':
+        titulo = request.form['tarea']
+        descripcion = request.form['descripcion']
+        categoria = request.form['mi_select']
+        usuario = session.get('id_usuario')
+        obj_proy = Proyecto(
+            nombre_proyecto=titulo,
+            descripcion_proyecto=descripcion,
+            categoria_id=categoria,
+            usuario_id_p=usuario,
+        )
+        print(obj_proy)
+        mensaje = proyecto_registrado(obj_proy)
+        if mensaje == "proyecto creado exitosamente":
+            mensaje_bueno = "Felicidades, usuario creado exitosamente"
+            db.session.add(obj_proy)
+            db.session.commit()
+            return render_template('index.html',mensaje=mensaje_bueno)
+    return render_template('index.html')
+
+
+# ===================================== LISTAR PROYECTOS ====================================
+
+@login_required
+@app.route('/proyectos', methods=['GET', 'POST'])
+def proyectos():
+    usuario_id = session.get('id_usuario')
+    proyectos = Proyecto.query.filter_by(usuario_id_p=usuario_id).all()
+    return render_template('proyectos.html', proyectos=proyectos)
+
+# ===================================== MOSTRAR PROYECTO ====================================
+@login_required
+@app.route('/proyecto/<int:proyecto_id>')
+def ver_proyecto(proyecto_id):
+    proyecto = Proyecto.query.get_or_404(proyecto_id)
+    tareas = Tarea.query.filter_by(proyecto_id=proyecto_id).all()
+    return render_template('proyecto_detalle.html', proyecto=proyecto, tareas=tareas)
+
 
 #============================================================================================================
 

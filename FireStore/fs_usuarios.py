@@ -18,7 +18,7 @@ class CN_Usuarios():
         if obj_user.contraseña_usuario.strip() == "":
             return "La contraseña no puede estar vacía"
 
-        CD_Usuario().controlador.agregar_usuario(obj_user)
+        CD_Usuario().agregar_usuario(obj_user)
         return "usuario creado exitosamente"
 
     #Confirmar la contraseña

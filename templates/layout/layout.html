@@ -68,10 +68,31 @@
                                 <button class="btn bg-dark text-white" onclick="abrirModal()">
                                     Agregar un nuevo proyecto
                                 </button>
-
-                                <a class="nav-link" href="">
+                                {% for proyecto in proyectos_usuario %}
+                                    <a class="nav-link" href="{{ url_for('ver_proyecto', proyecto_id=proyecto.id_proyecto) }}">
+                                        {{ proyecto.nombre_proyecto }}
+                                    </a>
+                                {% endfor %}
+                                <a class="nav-link" href="{{ url_for('proyectos') }}">
                                     Ver todos los proyectos
                                 </a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseCat" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Categorías
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseCat" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <button onclick="abrirModalCategoria()">
+                                    agregar
+                                </button>
+                                {% for categoria in categorias %}
+                                    {{ categoria.nombre_categoria }}
+                                {% endfor %}
                             </nav>
                         </div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
@@ -158,7 +179,7 @@
             </footer>
         </div>
     </div>
-    <!-- The Modal -->
+    <!-- Modal para crear proyectos -->
     <div class="modal" id="myModal_tarea" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -215,6 +236,41 @@
             </div>
         </div>
     </div>
+    <!-- Modal para crear categorias -->
+    <div class="modal" id="Modal_categoria" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-dark text-white">
+                    <h4 class="modal-title">Crear una nueva categoria</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="user" action="/nueva_categoria" method="POST">
+                        <div class="form-group">
+                            <label for="nombreCat">
+                                <strong>Nombre de la categoría</strong>
+                            </label>
+                            <input type="text" class="form-control form-control-user" id="nombreCat" name="nombreCat"
+                                placeholder="Ingrese el nombre">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                            Enviar los datos
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
@@ -238,5 +294,10 @@
         console.log("Descripción:", descripcion);
         console.log("Categoría:", categoria);
         $("#tarea").val("");
+    }
+    function abrirModalCategoria(){
+        var myModal = new bootstrap.Modal(document.getElementById('Modal_categoria'), {
+        backdrop: 'static' });
+        myModal.show();
     }
 </script>
