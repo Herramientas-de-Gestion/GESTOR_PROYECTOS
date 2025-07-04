@@ -86,6 +86,9 @@
                                 <button onclick="abrirModalCategoria()">
                                     agregar
                                 </button>
+                                {% for categoria in categorias %}
+                                    {{ categoria.nombre_categoria }}
+                                {% endfor %}
                             </nav>
                         </div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"

@@ -12,10 +12,12 @@ from Settings.settings import get_sqlalchemy_uri
 #IMPORTACIN DE CONTROLLERS
 from Controllers.ctr_usuarios import CD_Usuario
 from Controllers.ctr_categoria import Controll_Categoria
+from Controllers.ctr_proyectos import Controll_Proyecto
 
 #IMPORTACIN DE CONTROLLERS
 from FireStore.fs_usuarios import CN_Usuarios
 from FireStore.fs_categoria import categorias_listado,categoria_registrado
+from FireStore.fs_proyectos import proyectos_listado,proyecto_registrado
 
 #IMPORTACION DE SOURCES
 from Sources.src_Recursos import CN_Recursos
