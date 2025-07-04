@@ -167,6 +167,11 @@ def proyectos():
     categoria = Categoria.query.all()
     usuario_id = session.get('id_usuario')
     proyectos = Proyecto.query.filter_by(usuario_id_p=usuario_id).all()
+    print('verificando')
+    for proyecto in proyectos:
+        nombre = proyecto.nombre_proyecto
+        descripcion = proyecto.descripcion_proyecto
+        print(f'nombre: {nombre} descripcion: {descripcion}')
     return render_template('proyectos.html', proyectos=proyectos,categoria=categoria,nombre=nombre,apellido=apellido)
 
 # ===================================== MOSTRAR PROYECTO ====================================
