@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sb-admin-2.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mejoras.css')}}">
 </head>
 
 <body>
@@ -17,18 +18,14 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
+                            
                             <div class="col-lg-6 d-none d-lg-block bg-login-image">
-                                {% if mensaje %}
-                                <p style="color: red;">{{ mensaje }}</p>
-                                {% endif %}
-                                {% if mensaje_bueno %}
-                                <p style="color: rgb(0, 255, 149);">{{ mensaje }}</p>
-                                {% endif %}
+                                <img src="{{ url_for('static', filename='img/logical.png') }}" alt="" height="750px" width="480px">
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 coloreado">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Registra un nuevo usuario</h1>
                                     </div>
                                     <form class="user" action="/registro_usuario" method="POST">
                                         <div class="form-group">
@@ -37,7 +34,7 @@
                                             </label>
                                             <input type="text" class="form-control form-control-user" id="nombre"
                                                 name="nombre" aria-describedby="emailHelp"
-                                                placeholder="Enter Nombre Address...">
+                                                placeholder="Ingrese su nombre">
                                         </div>
                                         <div class="form-group">
                                             <label for="apellido">
@@ -45,7 +42,7 @@
                                             </label>
                                             <input type="text" class="form-control form-control-user" id="apellido"
                                                 name="apellido" aria-describedby="emailHelp"
-                                                placeholder="Enter Apellido Address...">
+                                                placeholder="Ingrese su apellido">
                                         </div>
                                         <div class="form-group">
                                             <label for="correo">
@@ -53,14 +50,14 @@
                                             </label>
                                             <input type="email" class="form-control form-control-user" id="correo"
                                                 name="correo" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="Ingrese su direccion de correo">
                                         </div>
                                         <div class="form-group">
                                             <label for="contraseña">
                                                 <strong>Contraseña</strong>
                                             </label>
                                             <input type="password" class="form-control form-control-user"
-                                                id="contraseña" name="contraseña" placeholder="Password">
+                                                id="contraseña" name="contraseña" placeholder="Ingrese su contraseña">
                                         </div>
                                         <div class="form-group">
                                             <label for="conf_contraseña">
@@ -68,14 +65,22 @@
                                             </label>
                                             <input type="password" class="form-control form-control-user"
                                                 id="conf_contraseña" name="conf_contraseña"
-                                                placeholder="conf_contraseña">
+                                                placeholder="Confirme su contraseña">
                                         </div>
                                         <button type="submit" class="btn btn-facebook btn-user btn-block">
-                                            Registrar
+                                            Registrar nuevo usuario
                                         </button>
                                     </form>
                                     <div class="text-center">
-                                        <a href="{{url_for('login')}}">Ir a login</a>
+                                        <a href="{{url_for('login')}}">Ir a inicio de session</a>
+                                    </div>
+                                    <div>
+                                        {% if mensaje %}
+                                            <p style="color: red;">{{ mensaje }}</p>
+                                        {% endif %}
+                                        {% if mensaje_bueno %}
+                                            <p style="color: rgb(0, 255, 149);">{{ mensaje }}</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
