@@ -44,9 +44,11 @@ def home():
 #============================================================================================================
 
 # ================================ RUTA PARA EL LOGIN PRINCIPAL =============================================
+#RUTA PARA REDIRIGIR AL LOGIN
 @app.route('/login',methods=['GET', 'POST'] )
 def login():
     return render_template('login.html')
+
 #RUTA PARA ENVIAR DATOS 
 @app.route('/enviar_datos', methods=['GET', 'POST'])
 def enviar_datos():
@@ -73,10 +75,45 @@ def logout():
     return redirect(url_for('login')) 
 #============================================================================================================
 
-# ================================ RUTA PARA LA SECCION REGISTRO  ===========================================
+# ================================ RUTA PARA LA SECCION INDEX  ==============================================
+@app.route('/index')
+def index():
+    cd= CN_Usuarios()
+    listar_usuarios= cd.usuarios_listado()
+    correo = session.get('correo_usuario', 'Usuario no identificado')
+    nombre = session.get('nombre_usuario', 'Usuario no identificado')
+    apellido = session.get('apellido_usuario', 'Usuario no identificado')
+    id_usuario = session.get('id_usuario') 
+    print("==============ESTADO=================")
+    estado = Estado.query.all()
+    for est in estado:
+        print(est.nombre_estado)
+    print("===============PRIORIDAD================")
+    prioridad = Prioridad.query.all()
+    for prio in prioridad:
+        print(prio.nombre_prioridad)
+    print("===============CATEGORIA================")
+    categoria = Categoria.query.all()
+    for cate in categoria:
+        print(cate.nombre_categoria)
+    print("===============PROYECTOS ================")
+    cantidad_proyectos=0
+    proyectos = Proyecto.query.filter_by(usuario_id_p=id_usuario).all()
+    for proy in proyectos:
+        cantidad_proyectos+=1
+        print(proy.nombre_proyecto)
+    print(cantidad_proyectos)
+    return render_template('index.html', listar_usuarios=listar_usuarios, correo=correo, 
+                            nombre=nombre, apellido=apellido, estado=estado, prioridad=prioridad, 
+                            categoria=categoria, id=id_usuario,cantidad_proyectos=cantidad_proyectos)
+#============================================================================================================
+
+# ================================ RUTA PARA LA SECCION REGISTRO ============================================
+#RUTA PARA REDIRECCIONAR AL REGISTRO DE USUARIOS
 @app.route('/registro_vista', methods=['GET', 'POST'])
 def registro_vista():
     return render_template('registro.html')
+
 #RUTA PARA REALIZAR EL REGISTRO
 @app.route('/registro_usuario', methods=['GET', 'POST'])
 def registro_usuario():
@@ -88,7 +125,6 @@ def registro_usuario():
         contraseña = request.form['contraseña']
         conf_contraseña = request.form['conf_contraseña']
 
-        # Verificar contraseña
         mensaje_contraseña = CN_Usuarios().confirmar_contraseña(contraseña, conf_contraseña)
         if mensaje_contraseña:
             return render_template('registro.html', mensaje=mensaje_contraseña)
@@ -100,16 +136,14 @@ def registro_usuario():
             contraseña_usuario=contraseña
         )
         mensaje = CN_Usuarios().usuario_registrado(obj_user)
-
         if mensaje == "usuario creado exitosamente":
             Enviar_correo(correo, contraseña)
             mensaje_bueno = "Felicidades, usuario creado exitosamente"
             return render_template('registro.html', mensaje=mensaje_bueno)
-
     return render_template('registro.html', mensaje=mensaje)
+#============================================================================================================
 
-
-# ===================================== CREAR CATEGORIA ====================================
+# ================================= RUTA PARA LA CREAR CATEGORIA ============================================
 @login_required
 @app.route('/nueva_categoria', methods=['POST'])
 def nueva_categoria():
@@ -127,10 +161,10 @@ def nueva_categoria():
             db.session.commit()
             return render_template('index.html',mensaje=mensaje_bueno)
     return render_template('index.html')
+#============================================================================================================
 
-
-# ===================================== CREAR PROYECTO ====================================
-
+# ================================== RUTA PARA LA CREAR PROYECTO ============================================
+#RUTA PARA GENERAR UN NUEVO PROYECTO
 @login_required
 @app.route('/nuevo_proyecto', methods=['POST'])
 def nuevo_proyecto():
@@ -155,9 +189,7 @@ def nuevo_proyecto():
             return render_template('index.html',mensaje=mensaje_bueno)
     return render_template('index.html')
 
-
-# ===================================== LISTAR PROYECTOS ====================================
-
+# RUTA PARA LISTAR PROYECTO 
 @login_required
 @app.route('/proyectos', methods=['GET', 'POST'])
 def proyectos():
@@ -168,53 +200,25 @@ def proyectos():
     usuario_id = session.get('id_usuario')
     proyectos = Proyecto.query.filter_by(usuario_id_p=usuario_id).all()
 
-    print('Mostrando los datos del proyecto')  
-    for proyecto in proyectos:
-        nombre = proyecto.nombre_proyecto
-        descripcion = proyecto.descripcion_proyecto
-        categoria = proyecto.categoria_id
-        print(f'nombre: {nombre} descripcion: {descripcion} categoria: {categoria}')
+    # print('Mostrando los datos del proyecto')  
+    # for proyecto in proyectos:
+    #     nombre = proyecto.nombre_proyecto
+    #     descripcion = proyecto.descripcion_proyecto
+    #     categoria = proyecto.categoria_id
+    #     categoria = Categoria.query.all()
+    #     print(f'nombre: {nombre} descripcion: {descripcion} categoria: {categoria}')
 
     return render_template('proyectos.html', proyectos=proyectos,categoria=categoria,nombre=nombre,apellido=apellido)
 
-# ===================================== MOSTRAR PROYECTO ====================================
+#RUTA PARA MOSTRAR PROYECTO
 @login_required
 @app.route('/proyecto/<int:proyecto_id>')
 def ver_proyecto(proyecto_id):
     proyecto = Proyecto.query.get_or_404(proyecto_id)
     tareas = Tarea.query.filter_by(proyecto_id=proyecto_id).all()
     return render_template('proyecto_detalle.html', proyecto=proyecto, tareas=tareas)
-
-
 #============================================================================================================
 
-# ================================ RUTA PARA LA SECCION INDEX  ==============================================
-@app.route('/index')
-def index():
-    cd= CN_Usuarios()
-    listar_usuarios= cd.usuarios_listado()
-    correo = session.get('correo_usuario', 'Usuario no identificado')
-    nombre = session.get('nombre_usuario', 'Usuario no identificado')
-    apellido = session.get('apellido_usuario', 'Usuario no identificado')
-    id_usuario = session.get('id_usuario') 
-    print("==============ESTADO=================")
-    estado = Estado.query.all()
-    for est in estado:
-        print(est.nombre_estado)
-    print("===============PRIORIDAD================")
-    prioridad = Prioridad.query.all()
-    for prio in prioridad:
-        print(prio.nombre_prioridad)
-    print("===============CATEGORIA================")
-    categoria = Categoria.query.all()
-    for cate in categoria:
-        print(cate.nombre_categoria)
-    return render_template('index.html',listar_usuarios=listar_usuarios,correo=correo, nombre=nombre,
-                            apellido=apellido, estado=estado, prioridad=prioridad, categoria=categoria)
-#============================================================================================================
-@app.route('/prueba')
-def prueba():
-    return render_template('layaout.html')
 if __name__ == '__main__':
     app.run(debug=True, port=9000)
 

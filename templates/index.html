@@ -3,34 +3,85 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 <div class="container-fluid mt-3">
-    <h3>Bienvenido {{ nombre }} {{ apellido }}</h3>
-    <p>
-        Explora nuestra herramienta para gestionar tus actividades agrupandolos por proyectos
-    </p>
+    <div class="perfil-admin-contenedor"
+        style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 5px; border: 1px solid #eee;">
+        <h3 style="margin-top: 0;">Perfil del Administrador: Bienvenido {{ nombre }} {{ apellido }}</h3>
+        <p><strong>ID:</strong> {{ id }}</p>
+        <p><strong>Correo:</strong> {{ correo }}</p>
+        <p><strong>Nombre completo:</strong> {{ nombre}} {{ apellido }}</p>
+    </div>
+    <div class="alert alert-info">
+        <strong>Atento!!</strong> Explora nuestra herramienta para gestionar tus actividades agrupandolos por proyectos
+        y registrando tareas para cada uno de ellos
+    </div>
     <div class="row">
-        <div class="col-sm-8 p-12 bg-primary text-white">
-            <p>Nosotros</p>
-            <p>Añade colaboradores</p>
-            <p>Mis trabajos</p>
+        <div class="col-sm-8 p-12">
+            <h3>Nosotros: </h3>
+
+            <h3>Mis trabajos: </h3>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="col-xl-12 col-md-2">
+                        <div class="card alert alert-success">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <h6>Cantidad-Proyectos</h6>
+                                        <h6 id="totalVentas"> {{ cantidad_proyectos}}</h6>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <i class="fas fa-book-open fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-xl-12 col-md-2">
+                        <div class="card alert alert-warning">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <h6>Cantidad-Tareas</h6>
+                                        <h6 id="totalVentas">0</h6>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <i class="fas fa-book-open fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>Añade colaboradores:</h3>
             {% for p in listar_usuarios %}
             <p>{{ p.id_usuario }}-{{
                 p.correo_usuario }}</p>
             {% endfor %}
         </div>
-        <div class="col-sm-4 bg-dark text-white">
-            <button class="btn bg-dark text-white"> 
-                Tareas
-            </button><br>
-            <button class="btn bg-dark text-white"> 
-                Manual
-            </button><br>
-            <!-- <p type="button" class="btn bg-dark text-white" data-bs-toggle="modal" data-bs-target="#myModal_correo">Envianos una sugerencia</p> -->
-            <button class="btn bg-dark text-white" onclick="abrirModalSugerencia()">
-                Enviar una sugerencia
-            </button><br>
-            <button class="btn bg-dark text-white"> 
-                Centro de ayuda
-            </button><br>
+        <div class="col-sm-4  text-white">
+            <div class="alert alert-primary">
+                <strong>Acciones!</strong> Importante para ti<br><br>
+                <button class="btn bg-dark text-white">
+                    <strong>Tareas</strong>
+                </button><br><br>
+                <button class="btn bg-dark text-white">
+                    <strong>Manual</strong>
+                </button><br><br>
+                <button class="btn bg-dark text-white" onclick="abrirModalSugerencia()">
+                    <strong>Enviar sugerencia</strong>
+                </button><br><br>
+                <button class="btn bg-dark text-white">
+                    <strong>Centro de Ayuda</strong>
+                </button><br>
+            </div>
+            <button class="btn">
+                <div class="alert alert-primary">
+                    <strong>Primary!</strong> Indicates an important action.
+                </div>
+            </button>
         </div>
     </div>
 </div>
@@ -39,14 +90,10 @@
 <div class="modal" id="myModalSugerencia" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-
-            <!-- Modal Header -->
             <div class="modal-header bg-dark text-white">
                 <h4 class="modal-title">Envia un mensaje .... </h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
-            <!-- Modal body -->
             <div class="modal-body">
                 <form class="user" action="" method="POST">
                     <div class="form-group">
@@ -77,24 +124,14 @@
                         <input type="text" class="form-control form-control-user" id="mensaje" name="mensaje"
                             placeholder="Ingrese el mensaje">
                     </div>
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox small">
-                            <input type="checkbox" class="custom-control-input" id="customCheck">
-                            <label class="custom-control-label" for="customCheck">Remember
-                                Me</label>
-                        </div>
-                    </div>
                     <button type="submit" class="btn btn-facebook btn-user btn-block">
                         Enviar los datos
                     </button>
                 </form>
             </div>
-
-            <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
             </div>
-
         </div>
     </div>
 </div>
