@@ -11,13 +11,16 @@ from Settings.settings import get_sqlalchemy_uri
 
 #IMPORTACIN DE CONTROLLERS
 from Controllers.ctr_usuarios import CD_Usuario
+from Controllers.ctr_categoria import Controll_Categoria
 
 #IMPORTACIN DE CONTROLLERS
 from FireStore.fs_usuarios import CN_Usuarios
+from FireStore.fs_categoria import categorias_listado,categoria_registrado
 
 #IMPORTACION DE SOURCES
 from Sources.src_Recursos import CN_Recursos
 from Sources.src_Correo import Enviar_correo
+from Sources.src_rutas import login_required
 
 #INICIALIZACION DE LA APP FLASK
 app = Flask(__name__)
@@ -101,6 +104,26 @@ def registro_usuario():
             return render_template('registro.html', mensaje=mensaje_bueno)
 
     return render_template('registro.html', mensaje=mensaje)
+
+
+# ===================================== CREAR CATEGORIA ====================================
+@login_required
+@app.route('/nueva_categoria', methods=['POST'])
+def nueva_categoria():
+    print('Creando categoria')
+    if request.method == 'POST':
+        nombreCat = request.form['nombreCat']
+        obj_cat = Categoria(
+            nombre_categoria=nombreCat,
+        )
+        print(obj_cat)
+        mensaje = categoria_registrado(obj_cat)
+        if mensaje == "categoria creado exitosamente":
+            mensaje_bueno = "Felicidades, categoria creado exitosamente"
+            db.session.add(obj_cat)
+            db.session.commit()
+            return render_template('index.html',mensaje=mensaje_bueno)
+    return render_template('index.html')
 
 #============================================================================================================
 
