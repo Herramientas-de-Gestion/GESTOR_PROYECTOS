@@ -56,6 +56,7 @@ def enviar_datos():
         contraseña = CN_Recursos().convertir_hash(contraseña)
         usuario = CN_Usuarios().consultar_usuario(correo,contraseña)
         if usuario:
+            print(usuario.id_usuario)
             session['id_usuario'] = usuario.id_usuario
             session['nombre_usuario'] = usuario.nombre_usuario
             session['correo_usuario'] = usuario.correo_usuario
@@ -160,9 +161,13 @@ def nuevo_proyecto():
 @login_required
 @app.route('/proyectos', methods=['GET', 'POST'])
 def proyectos():
+    correo = session.get('correo_usuario', 'Usuario no identificado')
+    nombre = session.get('nombre_usuario', 'Usuario no identificado')
+    apellido = session.get('apellido_usuario', 'Usuario no identificado')
+    categoria = Categoria.query.all()
     usuario_id = session.get('id_usuario')
     proyectos = Proyecto.query.filter_by(usuario_id_p=usuario_id).all()
-    return render_template('proyectos.html', proyectos=proyectos)
+    return render_template('proyectos.html', proyectos=proyectos,categoria=categoria,nombre=nombre,apellido=apellido)
 
 # ===================================== MOSTRAR PROYECTO ====================================
 @login_required
@@ -178,8 +183,30 @@ def ver_proyecto(proyecto_id):
 # ================================ RUTA PARA LA SECCION INDEX  ==============================================
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    cd= CN_Usuarios()
+    listar_usuarios= cd.usuarios_listado()
+    correo = session.get('correo_usuario', 'Usuario no identificado')
+    nombre = session.get('nombre_usuario', 'Usuario no identificado')
+    apellido = session.get('apellido_usuario', 'Usuario no identificado')
+    id_usuario = session.get('id_usuario') 
+    print("==============ESTADO=================")
+    estado = Estado.query.all()
+    for est in estado:
+        print(est.nombre_estado)
+    print("===============PRIORIDAD================")
+    prioridad = Prioridad.query.all()
+    for prio in prioridad:
+        print(prio.nombre_prioridad)
+    print("===============CATEGORIA================")
+    categoria = Categoria.query.all()
+    for cate in categoria:
+        print(cate.nombre_categoria)
+    return render_template('index.html',listar_usuarios=listar_usuarios,correo=correo, nombre=nombre,
+                            apellido=apellido, estado=estado, prioridad=prioridad, categoria=categoria)
 #============================================================================================================
+@app.route('/prueba')
+def prueba():
+    return render_template('layaout.html')
 if __name__ == '__main__':
     app.run(debug=True, port=9000)
 

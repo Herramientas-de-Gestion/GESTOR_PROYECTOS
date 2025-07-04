@@ -1,22 +1,24 @@
 {% extends 'layout/layout.html' %}
 {% block body%}
 <div class="container mt-4">
-   <h4 class="mb-4">Bienvenido Nombre Apellido</h4>
-   <h5 class="mb-3">Tus proyectos</h5>
-   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-       <div class="col">
-           <div class="card h-100 shadow-sm">
-               <div class="card-body">
-                   <h5 class="card-title">Nombre del proyecto</h5>
-                   <p class="card-text">Descripción del proyecto</p>
-                   <p class="card-text"><small class="text-muted">Creado: 01/01/2024</small></p>
-                   <span class="badge bg-secondary">Categoría del proyecto</span>
-               </div>
-               <div class="card-footer bg-transparent border-top-0">
-                   <a href="#" class="btn btn-sm btn-primary">Ver más</a>
-               </div>
-           </div>
-       </div>
-   </div>
+    <h4 class="mb-4">Bienvenido: {{ nombre }} {{ apellido }}</h4>
+    <h5 class="mb-3">Tus proyectoss</h5>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for proyecto in proyectos %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ proyecto.nombre_proyecto }}</h5>
+                    <p class="card-text">{{ proyecto.descripcion_proyecto }}</p>
+                    <p class="card-text"><small class="text-muted">Creado: {{ proyecto.fcreacion_proyecto.strftime('%d/%m/%Y') }}</small></p>
+                    <span class="badge bg-secondary">{{ proyecto.categoria.nombre_categoria }}</span>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{{ url_for('ver_proyecto', proyecto_id=proyecto.id_proyecto) }}" class="btn btn-sm btn-primary">Ver más</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {%endblock%}

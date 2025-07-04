@@ -1,9 +1,9 @@
-{% extends 'layout/layout.html' %}
+{% extends 'layout/layaout.html' %}
 {% block body%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 <div class="container-fluid mt-3">
-    
+    <h3>Bienvenido {{ nombre }} {{ apellido }}</h3>
     <p>
         Explora nuestra herramienta para gestionar tus actividades agrupandolos por proyectos
     </p>
@@ -12,7 +12,10 @@
             <p>Nosotros</p>
             <p>Añade colaboradores</p>
             <p>Mis trabajos</p>
-
+            {% for p in listar_usuarios %}
+            <p>{{ p.id_usuario }}-{{
+                p.correo_usuario }}</p>
+            {% endfor %}
         </div>
         <div class="col-sm-4 bg-dark text-white">
             <button class="btn bg-dark text-white"> 

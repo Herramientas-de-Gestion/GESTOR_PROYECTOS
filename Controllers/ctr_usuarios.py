@@ -15,7 +15,4 @@ class CD_Usuario():
         db.session.add(usuario_agregado)
         db.session.commit()
         return usuario_agregado
-    
-    #Consultar si el usuario existe para iniciar session
-    def consultar_usuario(self, correo,password):
-        return Usuario.query.filter_by(correo_usuario=correo,contraseña_usuario=password).first()
+
