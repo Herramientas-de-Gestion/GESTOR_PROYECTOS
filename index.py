@@ -127,6 +127,52 @@ def nueva_categoria():
             return render_template('index.html',mensaje=mensaje_bueno)
     return render_template('index.html')
 
+
+# ===================================== CREAR PROYECTO ====================================
+
+@login_required
+@app.route('/nuevo_proyecto', methods=['POST'])
+def nuevo_proyecto():
+    print('Entraste')
+    if request.method == 'POST':
+        titulo = request.form['tarea']
+        descripcion = request.form['descripcion']
+        categoria = request.form['mi_select']
+        usuario = session.get('id_usuario')
+        obj_proy = Proyecto(
+            nombre_proyecto=titulo,
+            descripcion_proyecto=descripcion,
+            categoria_id=categoria,
+            usuario_id_p=usuario,
+        )
+        print(obj_proy)
+        mensaje = proyecto_registrado(obj_proy)
+        if mensaje == "proyecto creado exitosamente":
+            mensaje_bueno = "Felicidades, usuario creado exitosamente"
+            db.session.add(obj_proy)
+            db.session.commit()
+            return render_template('index.html',mensaje=mensaje_bueno)
+    return render_template('index.html')
+
+
+# ===================================== LISTAR PROYECTOS ====================================
+
+@login_required
+@app.route('/proyectos', methods=['GET', 'POST'])
+def proyectos():
+    usuario_id = session.get('id_usuario')
+    proyectos = Proyecto.query.filter_by(usuario_id_p=usuario_id).all()
+    return render_template('proyectos.html', proyectos=proyectos)
+
+# ===================================== MOSTRAR PROYECTO ====================================
+@login_required
+@app.route('/proyecto/<int:proyecto_id>')
+def ver_proyecto(proyecto_id):
+    proyecto = Proyecto.query.get_or_404(proyecto_id)
+    tareas = Tarea.query.filter_by(proyecto_id=proyecto_id).all()
+    return render_template('proyecto_detalle.html', proyecto=proyecto, tareas=tareas)
+
+
 #============================================================================================================
 
 # ================================ RUTA PARA LA SECCION INDEX  ==============================================
