@@ -261,10 +261,10 @@ def nueva_tarea():
     db.session.commit()
     return redirect(url_for('ver_proyecto', proyecto_id=proyecto_id))
 
+# editar tarea
 @app.route('/editar_tarea/<int:tarea_id>', methods=['POST'])
 def editar_tarea(tarea_id):
-    tarea = Tarea.query.get_or_404(tarea_id)
-    # Obtener datos del formulario
+    tarea = Tarea.query.get_or_404(tarea_id)  
     tarea.titulo_tarea = request.form['titulo']
     tarea.descripcion_tarea = request.form['descripcion']
     tarea.fvencimiento_tarea = request.form['vencimiento']
@@ -274,6 +274,7 @@ def editar_tarea(tarea_id):
     db.session.commit()
     return redirect(url_for('ver_proyecto', proyecto_id=tarea.proyecto_id))
 
+#eliminar tarea
 @app.route('/eliminar_tarea/<int:tarea_id>', methods=['POST'])
 @login_required
 def eliminar_tarea(tarea_id):
