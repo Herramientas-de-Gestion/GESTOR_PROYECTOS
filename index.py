@@ -259,8 +259,6 @@ def nueva_tarea():
         )
     db.session.add(nueva_tarea)
     db.session.commit()
-    # Aquí iría tu lógica para guardar la tarea con db.session.add(...)
-    # Redireccionar o mostrar un mensaje
     return redirect(url_for('ver_proyecto', proyecto_id=proyecto_id))
 
 #============================================================================================================
