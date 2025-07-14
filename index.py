@@ -104,8 +104,7 @@ def index():
         print(proy.nombre_proyecto)
     print(cantidad_proyectos)
     return render_template('index.html', listar_usuarios=listar_usuarios, correo=correo, 
-                            nombre=nombre, apellido=apellido, estado=estado, prioridad=prioridad, 
-                            categoria=categoria, id=id_usuario,cantidad_proyectos=cantidad_proyectos)
+                            nombre=nombre, apellido=apellido, categoria=categoria, id=id_usuario,cantidad_proyectos=cantidad_proyectos)
 #============================================================================================================
 
 # ================================ RUTA PARA LA SECCION REGISTRO ============================================
@@ -214,9 +213,56 @@ def proyectos():
 @login_required
 @app.route('/proyecto/<int:proyecto_id>')
 def ver_proyecto(proyecto_id):
+    correo = session.get('correo_usuario', 'Usuario no identificado')
+    nombre = session.get('nombre_usuario', 'Usuario no identificado')
+    apellido = session.get('apellido_usuario', 'Usuario no identificado')
+    print(nombre)
+    print(correo)
     proyecto = Proyecto.query.get_or_404(proyecto_id)
+    print(proyecto.nombre_proyecto)
+    print(proyecto.fcreacion_proyecto)
     tareas = Tarea.query.filter_by(proyecto_id=proyecto_id).all()
-    return render_template('proyecto_detalle.html', proyecto=proyecto, tareas=tareas)
+    for ta in tareas:
+        print(ta.titulo_tarea)
+    cate = proyecto.categoria 
+    print(cate.nombre_categoria)
+    estado = Estado.query.all()
+    prioridad = Prioridad.query.all()
+    return render_template('proyecto_detalle.html',nombre=nombre, apellido=apellido,estado=estado, prioridad=prioridad, proyecto=proyecto, tareas=tareas,cate=cate)
+
+@app.route('/nueva_tarea', methods=['POST'])
+@login_required
+def nueva_tarea():
+    titulo = request.form['titulo']
+    descripcion = request.form['descripcion']
+    vencimiento = request.form['vencimiento']
+    prioridad_id = request.form['prioridad_id']
+    estado_id = request.form['estado_id']
+    proyecto_id = request.form['proyecto_id']
+    usuario_id = session.get('id_usuario')  # Asegúrate de que esté en sesión
+
+    print("Título:", titulo)
+    print("Descripción:", descripcion)
+    print("Vencimiento:", vencimiento)
+    print("Prioridad:", prioridad_id)
+    print("Estado:", estado_id)
+    print("Proyecto ID:", proyecto_id)
+    print("Usuario ID:", usuario_id)
+    nueva_tarea = Tarea(
+            titulo_tarea=titulo,
+            descripcion_tarea=descripcion,
+            fvencimiento_tarea=vencimiento,
+            prioridad_id=prioridad_id,
+            estado_id=estado_id,
+            usuario_id=usuario_id,
+            proyecto_id=proyecto_id
+        )
+    db.session.add(nueva_tarea)
+    db.session.commit()
+    # Aquí iría tu lógica para guardar la tarea con db.session.add(...)
+    # Redireccionar o mostrar un mensaje
+    return redirect(url_for('ver_proyecto', proyecto_id=proyecto_id))
+
 #============================================================================================================
 
 if __name__ == '__main__':

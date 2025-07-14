@@ -1,10 +1,19 @@
 {% extends 'layout/layaout.html' %}
 {% block body%}
 <div class="container mt-4">
-    <h4 class="mb-3">Nombre del Proyecto</h4>
-    <p>Descripción del proyecto</p>
-    <p><strong>Categoría:</strong> Nombre de la categoría</p>
-    <p><strong>Creado:</strong> 01/01/2024</p>
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="mb-3">{{proyecto.nombre_proyecto}}</h4>
+            <p>Descripción del proyecto: {{proyecto.descripcion_proyecto}}</p>
+            <p><strong>Categoría:</strong> {{cate.nombre_categoria}}</p>
+        </div>
+        <div class="col-md-8">
+            <p><strong>Creado:</strong> {{proyecto.fcreacion_proyecto}}</p>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-success" onclick="abrirModalTareas()">CREAR NUEVA TAREA</button>
+        </div>
+    </div>
     <hr>
     <h5 class="mt-4">Tareas del proyecto</h5>
 
@@ -31,4 +40,87 @@
         </div>
     </div>
 </div>
+<!-- Modal para crear categorias -->
+<div class="modal" id="myModal_tareas" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header bg-dark text-white">
+                <h4 class="modal-title">Crear una nueva Tarea </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="user" action="/nueva_tarea" method="POST">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="titulo">
+                                    <strong>Nombre de la tarea</strong>
+                                </label>
+                                <input type="text" class="form-control" id="titulo" name="titulo"
+                                    placeholder="Ingrese el nombre"><br>
+
+                                <label for="descripcion">
+                                    <strong>Descripción de la tarea</strong>
+                                </label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion"
+                                    placeholder="Ingrese la descripción"><br>
+
+                                <label for="vencimiento">
+                                    <strong>Fecha de vencimiento</strong>
+                                </label>
+                                <input type="date" class="form-control" id="vencimiento" name="vencimiento"><br>
+
+                                <input type="hidden" name="proyecto_id" value="{{ proyecto.id_proyecto }}">
+                                <!-- Asegúrate de pasar proyecto -->
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="prioridad">
+                                    <strong>Prioridad</strong>
+                                </label><br>
+                                <select id="prioridad" name="prioridad_id" class="form-control">
+                                    <option value="" selected disabled hidden>Selecciona una opción</option>
+                                    {% for p in prioridad %}
+                                    <option value="{{ p.id_prioridad }}">{{ p.nombre_prioridad }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="estado">
+                                    <strong>Estado</strong>
+                                </label><br>
+                                <select id="estado" name="estado_id" class="form-control">
+                                    <option value="" selected disabled hidden>Selecciona una opción</option>
+                                    {% for e in estado %}
+                                    <option value="{{ e.id_estado }}">{{ e.nombre_estado }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                        Enviar los datos
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function abrirModalTareas() {
+        var myModal = new bootstrap.Modal(document.getElementById('myModal_tareas'), {
+            backdrop: 'static'
+        });
+        myModal.show();
+    }
+</script>
 {%endblock%}

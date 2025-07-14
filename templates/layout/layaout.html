@@ -170,7 +170,7 @@
         </div>
     </div>
     <!-- Modal para crear proyectos -->
-    <div class="modal" id="myModal_tarea" data-bs-backdrop="static">
+    <div class="modal" id="myModal_proyecto" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -231,13 +231,11 @@
     <div class="modal" id="Modal_categoria" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-
                 <!-- Modal Header -->
                 <div class="modal-header bg-dark text-white">
                     <h4 class="modal-title">Crear una nueva categoria</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
                 <!-- Modal body -->
                 <div class="modal-body">
                     <form class="user" action="/nueva_categoria" method="POST">
@@ -271,7 +269,7 @@
 </body>
 <script>
     function abrirModal() {
-        var myModal = new bootstrap.Modal(document.getElementById('myModal_tarea'), {
+        var myModal = new bootstrap.Modal(document.getElementById('myModal_proyecto'), {
             backdrop: 'static'
         });
         myModal.show();
