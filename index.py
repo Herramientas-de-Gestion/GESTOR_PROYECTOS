@@ -274,6 +274,15 @@ def editar_tarea(tarea_id):
     db.session.commit()
     return redirect(url_for('ver_proyecto', proyecto_id=tarea.proyecto_id))
 
+@app.route('/eliminar_tarea/<int:tarea_id>', methods=['POST'])
+@login_required
+def eliminar_tarea(tarea_id):
+    tarea = Tarea.query.get_or_404(tarea_id)
+    proyecto_id = tarea.proyecto_id  
+
+    db.session.delete(tarea)
+    db.session.commit()
+    return redirect(url_for('ver_proyecto', proyecto_id=proyecto_id))
 
 
 #============================================================================================================
