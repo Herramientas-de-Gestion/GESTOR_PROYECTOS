@@ -1,1 +1,32 @@
+name: Construir y Publicar Imagen Docker de la Web
 
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write  # Necesitamos permisos para publicar en GitHub Packages
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest  # Ejecutamos este trabajo en una máquina virtual Linux
+
+    steps:
+      - name: Clonar el Repositorio
+        uses: actions/checkout@v4  # Acción para obtener el código del repositorio
+
+      - name: Iniciar Sesión en GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}  # Usa el usuario que activó el workflow
+          password: ${{ secrets.GITHUB_TOKEN }}  # Token automático de GitHub
+
+      - name: Construir y Publicar Imagen Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .  # Busca el Dockerfile en el directorio actual
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest  # Etiqueta de la imagen
