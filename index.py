@@ -221,7 +221,10 @@ def ver_proyecto(proyecto_id):
     proyecto = Proyecto.query.get_or_404(proyecto_id)
     print(proyecto.nombre_proyecto)
     print(proyecto.fcreacion_proyecto)
+    print(proyecto_id)
     tareas = Tarea.query.filter_by(proyecto_id=proyecto_id).all()
+    print(tareas)
+    print("pruieba")
     for ta in tareas:
         print(ta.titulo_tarea)
     cate = proyecto.categoria 
@@ -290,4 +293,5 @@ def eliminar_tarea(tarea_id):
 
 if __name__ == '__main__':
     app.run(debug=True, port=9000)
+
 
