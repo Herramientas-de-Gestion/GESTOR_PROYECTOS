@@ -61,7 +61,7 @@
         .menu-section {
             margin-bottom: 30px;
         }
-
+/*========================================*/
         .menu-title {
             font-size: 12px;
             text-transform: uppercase;
@@ -114,11 +114,10 @@
             background: rgba(255, 255, 255, 0.95);
             margin: 20px;
             border-radius: 20px;
-            backdrop-filter: blur(20px);
+            /*backdrop-filter: blur(20px);*/
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -193,7 +192,6 @@
         .user-dropdown.active .dropdown-arrow {
             transform: rotate(180deg);
         }
-
         .dropdown-menu {
             position: absolute;
             top: calc(100% + 10px);
@@ -260,8 +258,6 @@
             font-size: 16px;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
-
-        /* Nuevo estilo para el enlace de cerrar sesión */
         .logout-link {
             color: #dc2626;
             text-decoration: none;
@@ -622,7 +618,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="sidebar">
         <div class="logo">Gestor de Proyectos</div>
@@ -659,7 +654,6 @@
                 <span>➕</span>
                 <span>Agregar Categoria</span>
             </button>
-
         </div>
         <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
             <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">
@@ -668,7 +662,6 @@
             </div>
         </div>
     </div>
-
     <div class="main-content">
         <div class="header">
             <div class="search-container">
@@ -683,14 +676,12 @@
                         <i class="dropdown-arrow">▼</i>
                     </button>
                 </div>
-                <!-- Nuevo enlace de cerrar sesión al costado -->
                 <a href="{{ url_for('logout') }}" class="logout-link" id="directLogout">
                     <span>🚪</span>
                     <span>Cerrar Sesión</span>
                 </a>
             </div>
         </div>
-
         <!--**********************************************************************-->
         {% block body%}
         {% endblock%}
@@ -750,12 +741,10 @@
     <div class="modal" id="Modal_categoria" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-                <!-- Modal Header -->
                 <div class="modal-header bg-dark text-white">
                     <h4 class="modal-title">Crear una nueva categoria</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <!-- Modal body -->
                 <div class="modal-body">
                     <form class="user" action="/nueva_categoria" method="POST">
                         <div class="form-group">
@@ -892,5 +881,4 @@
         });
     </script>
 </body>
-
 </html>
