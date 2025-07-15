@@ -1,5 +1,7 @@
-{% extends 'layout/layaout.html' %}
+{% extends 'layout/superlayout.html' %}
 {% block body%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 <div class="container mt-4">
     <h4 class="mb-4">Bienvenido: {{ nombre }} {{ apellido }} | Revisa tus proyectos</h4>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">

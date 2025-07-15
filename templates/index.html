@@ -1,87 +1,105 @@
-{% extends 'layout/layaout.html' %}
+{% extends 'layout/superlayout.html' %}
 {% block body%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 <div class="container-fluid mt-3">
-    <div class="perfil-admin-contenedor"
-        style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 5px; border: 1px solid #eee;">
-        <h3 style="margin-top: 0;">Perfil del Administrador: Bienvenido {{ nombre }} {{ apellido }}</h3>
-        <p><strong>ID:</strong> {{ id }}</p>
-        <p><strong>Correo:</strong> {{ correo }}</p>
-        <p><strong>Nombre completo:</strong> {{ nombre}} {{ apellido }}</p>
+    <div class="profile-card fade-in">
+        <div class="profile-title">Perfil del Administrador: Bienvenido {{ nombre }} {{ apellido }}</div>
+        <div class="profile-info">
+            <div class="info-item">
+                <div class="info-icon">🆔</div>
+                <div>
+                    <div style="font-weight: 600; color: #2d3748;">ID:</div>
+                    <div style="color: #718096;">{{ id }}</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">✉️</div>
+                <div>
+                    <div style="font-weight: 600; color: #2d3748;">Correo:</div>
+                    <div style="color: #718096;">{{ correo }}</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">👤</div>
+                <div>
+                    <div style="font-weight: 600; color: #2d3748;">Nombre completo:</div>
+                    <div style="color: #718096;">{{ nombre }} {{ apellido }}</div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="alert alert-info">
-        <strong>Atento!!</strong> Explora nuestra herramienta para gestionar tus actividades agrupandolos por proyectos
-        y registrando tareas para cada uno de ellos
+    <div class="important-notice fade-in">
+        <div class="notice-title">¡Acciones importantes para ti!</div>
+        <div class="notice-text">
+            <strong>¡Atento!</strong> Explora nuestra herramienta para gestionar tus actividades agrupándolos por
+            proyectos y registrando tareas para cada uno de ellos
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-8 p-12">
-            <h3>Nosotros: </h3>
+            <div class="section-title">Nosotros:</div>
 
-            <h3>Mis trabajos: </h3>
+            <div class="section-title">Mis trabajos:</div>
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="col-xl-12 col-md-2">
-                        <div class="card alert alert-success">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-9">
-                                        <h6>Cantidad-Proyectos</h6>
-                                        <h6 id="totalVentas"> {{ cantidad_proyectos}}</h6>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <i class="fas fa-book-open fa-2x"></i>
-                                    </div>
-                                </div>
+                    <div class="stats-grid">
+                        <div class="stat-card projects fade-in">
+                            <div class="stat-header">
+                                <div class="stat-title">Cantidad-Proyectos</div>
+                                <div class="stat-icon">📚</div>
                             </div>
+                            <div class="stat-number">{{ cantidad_proyectos}}</div>
+                            <div class="stat-label">Proyectos Activos</div>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-sm-6">
-                    <div class="col-xl-12 col-md-2">
-                        <div class="card alert alert-warning">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-9">
-                                        <h6>Cantidad-Tareas</h6>
-                                        <h6 id="totalVentas">0</h6>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <i class="fas fa-book-open fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="stat-card tasks fade-in">
+                        <div class="stat-header">
+                            <div class="stat-title">Cantidad-Tareas</div>
+                            <div class="stat-icon">📋</div>
                         </div>
+                        <div class="stat-number">{{ cantidad_tareas}}</div>
+                        <div class="stat-label">Tareas Pendientes</div>
                     </div>
                 </div>
             </div>
-            <h3>Añade colaboradores:</h3>
-            {% for p in listar_usuarios %}
-            <p>{{ p.id_usuario }}-{{
-                p.correo_usuario }}</p>
-            {% endfor %}
+            <div class="collaborators-section fade-in">
+                <div class="section-title">Añade colaboradores:</div>
+                {% for p in listar_usuarios %}
+                <div class="collaborator-item">
+                    <div class="collaborator-avatar">RR</div>
+                    <div>
+                        <div style="font-weight: 600; color: #2d3748;">
+                            {{p.correo_usuario }}
+                        </div>
+                        <div style="color: #718096; font-size: 14px;">Administrador Principal</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="col-sm-4  text-white">
-            <div class="alert alert-primary">
-                <strong>Acciones!</strong> Importante para ti<br><br>
-                <button class="btn bg-dark text-white">
-                    <strong>Tareas</strong>
-                </button><br><br>
-                <button class="btn bg-dark text-white">
-                    <strong>Manual</strong>
-                </button><br><br>
-                <button class="btn bg-dark text-white" onclick="abrirModalSugerencia()">
-                    <strong>Enviar sugerencia</strong>
-                </button><br><br>
-                <button class="btn bg-dark text-white">
-                    <strong>Centro de Ayuda</strong>
-                </button><br>
+            <div class="action-buttons">
+                <button class="action-btn primary pulse">
+                    <span>📝</span>
+                    Tareas
+                </button>
+                <button class="action-btn secondary">
+                    <span>📖</span>
+                    Manual
+                </button>
+                <button class="action-btn accent" onclick="abrirModalSugerencia()">
+                    <span>💡</span>
+                    Enviar sugerencia
+                </button>
+                <button class="action-btn info">
+                    <span>❓</span>
+                    Centro de Ayuda
+                </button>
             </div>
-            <button class="btn">
-                <div class="alert alert-primary">
-                    <strong>Primary!</strong> Indicates an important action.
-                </div>
-            </button>
         </div>
     </div>
 </div>

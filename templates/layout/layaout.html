@@ -53,12 +53,12 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <div class="sb-sidenav-menu-heading">Principal</div>
                         <a class="nav-link" href="{{url_for('index')}}">
                             <div class="sb-nav-link-icon"><i class="bi bi-house-gear-fill"></i></div>
                             Inicio
                         </a>
-                        <div class="sb-sidenav-menu-heading">Interface</div>
+                        <div class="sb-sidenav-menu-heading">Secciones</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="bi bi-list-task"></i></div>
@@ -91,8 +91,8 @@
                         <div class="collapse" id="collapseCat" aria-labelledby="headingOne"
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <button onclick="abrirModalCategoria()">
-                                    agregar
+                                <button class="btn bg-dark text-white" onclick="abrirModalCategoria()">
+                                    Añadir una categoria
                                 </button>
                                 {% for categoria in categorias %}
                                 {{ categoria.nombre_categoria }}
@@ -141,8 +141,8 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
+                    <div class="small">Colaboraciones:</div>
+                    <p style="font-size: 13px;">Universidad Tecnologica del Peru</p>
                 </div>
             </nav>
         </div>
@@ -173,14 +173,10 @@
     <div class="modal" id="myModal_proyecto" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-
-                <!-- Modal Header -->
                 <div class="modal-header bg-dark text-white">
                     <h4 class="modal-title">Crear un nuevo proyecto</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-                <!-- Modal body -->
                 <div class="modal-body">
                     <form class="user" action="/nuevo_proyecto" method="POST">
                         <div class="form-group">
@@ -189,14 +185,14 @@
                             </label>
                             <input type="text" class="form-control form-control-user" id="tarea" name="tarea"
                                 placeholder="Ingrese el titulo">
-                        </div>
+                        </div><br>
                         <div class="form-group">
                             <label for="descripcion">
                                 <strong>Descripcion del proyecto</strong>
                             </label>
                             <input type="text" class="form-control form-control-user largo" id="descripcion"
                                 name="descripcion" placeholder="Ingrese la descripcion">
-                        </div>
+                        </div><br>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-12">
@@ -212,18 +208,14 @@
                                 </div>
                             </div>
                         </div><br>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                        <button type="submit" class="btn btn-success btn-user btn-block">
                             Enviar los datos
                         </button>
-                                 
                     </form>
                 </div>
-
-                <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -245,14 +237,14 @@
                             </label>
                             <input type="text" class="form-control form-control-user" id="nombreCat" name="nombreCat"
                                 placeholder="Ingrese el nombre">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                            Enviar los datos
+                        </div><br>
+                        <button type="submit" class="btn btn-success btn-user btn-block">
+                            Crear la categoria
                         </button>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>

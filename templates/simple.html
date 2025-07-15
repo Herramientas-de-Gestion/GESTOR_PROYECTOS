@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Proyectos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo::before {
+            content: '📊';
+            font-size: 28px;
+        }
+
+        .menu-section {
+            margin-bottom: 30px;
+        }
+
+        .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .menu-item:hover::before {
+            left: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            margin: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown-toggle:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .dropdown-arrow {
+            font-size: 12px;
+            color: #718096;
+            transition: transform 0.3s ease;
+        }
+
+        .user-dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+        }
+
+        .user-dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #4a5568;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 5px 8px;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9ff;
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item.logout:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #e2e8f0;
+            border: none;
+            margin: 8px 16px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Nuevo estilo para el enlace de cerrar sesión */
+        .logout-link {
+            color: #dc2626;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-link:hover {
+            background: #fef2f2;
+            transform: translateX(-2px);
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .profile-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #4fd1c7, #06b6d4);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(79, 209, 199, 0.3);
+        }
+
+        .alert-icon {
+            font-size: 24px;
+        }
+
+        .alert-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card.projects::before {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .stat-card.tasks::before {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-card.projects .stat-icon {
+            background: linear-gradient(45deg, #10b981, #34d399);
+        }
+
+        .stat-card.tasks .stat-icon {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(45deg, #2d3748, #4a5568);
+            color: white;
+            box-shadow: 0 8px 25px rgba(45, 55, 72, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(45, 55, 72, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(45deg, #4a5568, #718096);
+            color: white;
+            box-shadow: 0 8px 25px rgba(74, 85, 104, 0.3);
+        }
+
+        .action-btn.secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(74, 85, 104, 0.4);
+        }
+
+        .action-btn.accent {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn.accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-btn.info {
+            background: linear-gradient(45deg, #4fd1c7, #06b6d4);
+            color: white;
+            box-shadow: 0 8px 25px rgba(79, 209, 199, 0.3);
+        }
+
+        .action-btn.info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(79, 209, 199, 0.4);
+        }
+
+        .collaborators-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .collaborator-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .collaborator-item:hover {
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .collaborator-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .important-notice {
+            background: linear-gradient(135deg, #e8f0ff, #f0f8ff);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .important-notice::before {
+            content: '⚡';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+        }
+
+        .notice-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .notice-text {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">Gestión de Proyectos</div>
+        
+        <div class="menu-section">
+            <div class="menu-title">Principal</div>
+            <div class="menu-item active">
+                <span>🏠</span>
+                <span>Inicio</span>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <div class="menu-title">Secciones</div>
+            <div class="menu-item">
+                <span>📋</span>
+                <span>Proyectos</span>
+            </div>
+            <button class="menu-item add-project-btn" style="margin-left: 20px; border: none; background: none; color: inherit; font: inherit; cursor: pointer; width: 100%; text-align: left;">
+                <span>➕</span>
+                <span>Agregar un proyecto</span>
+            </button>
+            <div class="menu-item" style="margin-left: 20px;">
+                <span>👀</span>
+                <span>Ver los proyectos</span>
+            </div>
+            <div class="menu-item">
+                <span>📂</span>
+                <span>Categorías</span>
+            </div>
+            <div class="menu-item">
+                <span>⭐</span>
+                <span>Favoritos</span>
+            </div>
+        </div>
+        
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">
+                <div>Colaboraciones:</div>
+                <div>Universidad Tecnológica del Perú</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search for...">
+                <div class="search-icon">🔍</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">RR</div>
+                <div class="user-dropdown">
+                    <button class="user-dropdown-toggle">
+                        <span style="font-weight: 600; color: #2d3748;">rojo rojas</span>
+                        <i class="dropdown-arrow">▼</i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <span>⚙️</span>
+                            <span>Configuraciones</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span>👤</span>
+                            <span>Actividades</span>
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a href="#" class="dropdown-item logout">
+                            <span>🚪</span>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Nuevo enlace de cerrar sesión al costado -->
+                <a href="#" class="logout-link" id="directLogout">
+                    <span>🚪</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-card fade-in">
+            <div class="profile-title">Perfil del Administrador: Bienvenido rojo rojas</div>
+            <div class="profile-info">
+                <div class="info-item">
+                    <div class="info-icon">🆔</div>
+                    <div>
+                        <div style="font-weight: 600; color: #2d3748;">ID:</div>
+                        <div style="color: #718096;">1</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">✉️</div>
+                    <div>
+                        <div style="font-weight: 600; color: #2d3748;">Correo:</div>
+                        <div style="color: #718096;">rojo@gmail.com</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">👤</div>
+                    <div>
+                        <div style="font-weight: 600; color: #2d3748;">Nombre completo:</div>
+                        <div style="color: #718096;">rojo rojas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner fade-in">
+            <div class="alert-icon">💡</div>
+            <div class="alert-text">
+                <strong>¡Atento!</strong> Explora nuestra herramienta para gestionar tus actividades agrupándolos por proyectos y registrando tareas para cada uno de ellos
+            </div>
+        </div>
+
+        <div class="important-notice fade-in">
+            <div class="notice-title">¡Acciones importantes para ti!</div>
+            <div class="notice-text">
+                Gestiona tus proyectos y tareas de manera eficiente con nuestras herramientas especializadas.
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 30px; align-items: flex-start;">
+            <div style="flex: 1;">
+                <div class="section-title">Nosotros:</div>
+                <div style="font-size: 24px; font-weight: 600; color: #2d3748; margin-bottom: 30px;">Mis trabajos:</div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card projects fade-in">
+                        <div class="stat-header">
+                            <div class="stat-title">Cantidad-Proyectos</div>
+                            <div class="stat-icon">📚</div>
+                        </div>
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Proyectos Activos</div>
+                    </div>
+                    
+                    <div class="stat-card tasks fade-in">
+                        <div class="stat-header">
+                            <div class="stat-title">Cantidad-Tareas</div>
+                            <div class="stat-icon">📋</div>
+                        </div>
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Tareas Pendientes</div>
+                    </div>
+                </div>
+
+                <div class="collaborators-section fade-in">
+                    <div class="section-title">Añade colaboradores:</div>
+                    <div class="collaborator-item">
+                        <div class="collaborator-avatar">RR</div>
+                        <div>
+                            <div style="font-weight: 600; color: #2d3748;">rojo@gmail.com</div>
+                            <div style="color: #718096; font-size: 14px;">Administrador Principal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="min-width: 250px;">
+                <div class="action-buttons">
+                    <button class="action-btn primary pulse">
+                        <span>📝</span>
+                        Tareas
+                    </button>
+                    <button class="action-btn secondary">
+                        <span>📖</span>
+                        Manual
+                    </button>
+                    <button class="action-btn accent">
+                        <span>💡</span>
+                        Enviar sugerencia
+                    </button>
+                    <button class="action-btn info">
+                        <span>❓</span>
+                        Centro de Ayuda
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para manejar el cierre de sesión
+            function handleLogout() {
+                if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
+                    // Aquí puedes agregar la lógica de logout
+                    alert('Cerrando sesión...');
+                    // Ejemplo: window.location.href = '/logout';
+                }
+            }
+
+            // Funcionalidad del menú desplegable de usuario
+            const dropdownToggle = document.querySelector('.user-dropdown-toggle');
+            const dropdown = document.querySelector('.user-dropdown');
+            
+            if (dropdownToggle && dropdown) {
+                dropdownToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropdown.classList.toggle('active');
+                    console.log('Dropdown clicked, active:', dropdown.classList.contains('active'));
+                });
+            }
+        
+            // Cerrar dropdown al hacer click fuera
+            document.addEventListener('click', function(e) {
+                const dropdown = document.querySelector('.user-dropdown');
+                if (dropdown && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // Funcionalidad para el enlace directo de cerrar sesión
+            const directLogout = document.getElementById('directLogout');
+            if (directLogout) {
+                directLogout.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleLogout();
+                });
+            }
+
+            // Funcionalidad de los items del dropdown
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const text = this.querySelector('span:last-child').textContent;
+                    
+                    if (text === 'Cerrar Sesión') {
+                        handleLogout();
+                    } else {
+                        alert(`Has seleccionado: ${text}`);
+                        // Aquí puedes agregar la lógica para cada opción
+                    }
+                    
+                    document.querySelector('.user-dropdown').classList.remove('active');
+                });
+            });
+
+            // Funcionalidad específica para el botón de agregar proyecto
+            const addProjectBtn = document.querySelector('.add-project-btn');
+            if (addProjectBtn) {
+                addProjectBtn.addEventListener('click', function() {
+                    // Efecto visual de click
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                    
+                    // Aquí puedes agregar la lógica para agregar un proyecto
+                    alert('¡Funcionalidad de agregar proyecto activada!');
+                });
+            }
+
+            // Agregar interactividad a los items del menú
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Animaciones de hover para las tarjetas
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+        

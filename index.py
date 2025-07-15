@@ -23,6 +23,7 @@ from FireStore.fs_proyectos import proyectos_listado,proyecto_registrado
 from Sources.src_Recursos import CN_Recursos
 from Sources.src_Correo import Enviar_correo
 from Sources.src_rutas import login_required
+from Sources.src_dashboard import Cantidades
 
 #INICIALIZACION DE LA APP FLASK
 app = Flask(__name__)
@@ -84,27 +85,11 @@ def index():
     nombre = session.get('nombre_usuario', 'Usuario no identificado')
     apellido = session.get('apellido_usuario', 'Usuario no identificado')
     id_usuario = session.get('id_usuario') 
-    print("==============ESTADO=================")
-    estado = Estado.query.all()
-    for est in estado:
-        print(est.nombre_estado)
-    print("===============PRIORIDAD================")
-    prioridad = Prioridad.query.all()
-    for prio in prioridad:
-        print(prio.nombre_prioridad)
-    print("===============CATEGORIA================")
     categoria = Categoria.query.all()
-    for cate in categoria:
-        print(cate.nombre_categoria)
-    print("===============PROYECTOS ================")
-    cantidad_proyectos=0
-    proyectos = Proyecto.query.filter_by(usuario_id_p=id_usuario).all()
-    for proy in proyectos:
-        cantidad_proyectos+=1
-        print(proy.nombre_proyecto)
-    print(cantidad_proyectos)
+    cantidad_proyectos = Cantidades().mostrar_proyectos(id_usuario)
+    cantidad_tareas = Cantidades().mostrar_tareas(id_usuario)
     return render_template('index.html', listar_usuarios=listar_usuarios, correo=correo, 
-                            nombre=nombre, apellido=apellido, categoria=categoria, id=id_usuario,cantidad_proyectos=cantidad_proyectos)
+                            nombre=nombre, apellido=apellido, categoria=categoria, id=id_usuario,cantidad_proyectos=cantidad_proyectos,cantidad_tareas=cantidad_tareas)
 #============================================================================================================
 
 # ================================ RUTA PARA LA SECCION REGISTRO ============================================
@@ -158,7 +143,7 @@ def nueva_categoria():
             mensaje_bueno = "Felicidades, categoria creado exitosamente"
             db.session.add(obj_cat)
             db.session.commit()
-            return render_template('index.html',mensaje=mensaje_bueno)
+            return redirect(url_for('index'))
     return render_template('index.html')
 #============================================================================================================
 
@@ -199,14 +184,6 @@ def proyectos():
     usuario_id = session.get('id_usuario')
     proyectos = Proyecto.query.filter_by(usuario_id_p=usuario_id).all()
 
-    # print('Mostrando los datos del proyecto')  
-    # for proyecto in proyectos:
-    #     nombre = proyecto.nombre_proyecto
-    #     descripcion = proyecto.descripcion_proyecto
-    #     categoria = proyecto.categoria_id
-    #     categoria = Categoria.query.all()
-    #     print(f'nombre: {nombre} descripcion: {descripcion} categoria: {categoria}')
-
     return render_template('proyectos.html', proyectos=proyectos,categoria=categoria,nombre=nombre,apellido=apellido)
 
 #RUTA PARA MOSTRAR PROYECTO
@@ -216,22 +193,19 @@ def ver_proyecto(proyecto_id):
     correo = session.get('correo_usuario', 'Usuario no identificado')
     nombre = session.get('nombre_usuario', 'Usuario no identificado')
     apellido = session.get('apellido_usuario', 'Usuario no identificado')
-    print(nombre)
-    print(correo)
+    categoria = Categoria.query.all()
     proyecto = Proyecto.query.get_or_404(proyecto_id)
     print(proyecto.nombre_proyecto)
     print(proyecto.fcreacion_proyecto)
     print(proyecto_id)
     tareas = Tarea.query.filter_by(proyecto_id=proyecto_id).all()
-    print(tareas)
-    print("pruieba")
     for ta in tareas:
         print(ta.titulo_tarea)
     cate = proyecto.categoria 
     print(cate.nombre_categoria)
     estado = Estado.query.all()
     prioridad = Prioridad.query.all()
-    return render_template('proyecto_detalle.html',nombre=nombre, apellido=apellido,estado=estado, prioridad=prioridad, proyecto=proyecto, tareas=tareas,cate=cate)
+    return render_template('proyecto_detalle.html',categoria= categoria,nombre=nombre, apellido=apellido,estado=estado, prioridad=prioridad, proyecto=proyecto, tareas=tareas,cate=cate)
 
 @app.route('/nueva_tarea', methods=['POST'])
 @login_required
