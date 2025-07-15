@@ -204,15 +204,16 @@ def ver_proyecto(proyecto_id):
     cate = proyecto.categoria 
     print(cate.nombre_categoria)
     estado = Estado.query.all()
+    print(estado)
     prioridad = Prioridad.query.all()
     return render_template('proyecto_detalle.html',categoria= categoria,nombre=nombre, apellido=apellido,estado=estado, prioridad=prioridad, proyecto=proyecto, tareas=tareas,cate=cate)
-
+from datetime import datetime
 @app.route('/nueva_tarea', methods=['POST'])
 @login_required
 def nueva_tarea():
     titulo = request.form['titulo']
     descripcion = request.form['descripcion']
-    vencimiento = request.form['vencimiento']
+    vencimiento_str = request.form['vencimiento']
     prioridad_id = request.form['prioridad_id']
     estado_id = request.form['estado_id']
     proyecto_id = request.form['proyecto_id']
@@ -220,11 +221,17 @@ def nueva_tarea():
 
     print("Título:", titulo)
     print("Descripción:", descripcion)
-    print("Vencimiento:", vencimiento)
+    print("Vencimiento:", vencimiento_str)
     print("Prioridad:", prioridad_id)
     print("Estado:", estado_id)
     print("Proyecto ID:", proyecto_id)
     print("Usuario ID:", usuario_id)
+     # Convertir fecha string a datetime
+    try:
+        vencimiento = datetime.strptime(vencimiento_str, '%Y-%m-%d') if vencimiento_str else None
+    except ValueError:
+        print("La fecha no tiene un formato válido", "danger")
+        return redirect(request.referrer)
     nueva_tarea = Tarea(
             titulo_tarea=titulo,
             descripcion_tarea=descripcion,
